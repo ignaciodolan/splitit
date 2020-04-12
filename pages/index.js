@@ -10,40 +10,11 @@ import '../styles/main.css';
 
 const Home = () => {
   const [textList, setTextList] = React.useState([]);
-  console.log(textList);
-  const lexer = moo.compile({
-    WS: /[ \t]+/,
-    comment: /\/\/.*?$/,
-    number: /0|[1-9][0-9]*/,
-    string: /"(?:\\["\\]|[^\n"\\])*"/,
-    text: /[A-Za-z]+/,
-    lparen: '(',
-    rparen: ')',
-    // keyword: ['while', 'if', 'else', 'moo', 'cows'],
-    NL: { match: /\n/, lineBreaks: true },
-  });
-
-  // const expenses = textList.map((text) => {
-  //   const expense = Array.from(lexer.reset(text))
-
-  //   if (expense.length === 0) return
-
-  //   const amount = expense.find((e) => e.type === 'number')
-  //   const name = expense.find((e) => e.type === 'text')
-
-  //   if (!amount || !name) return
-
-  //   return ({
-  //     name: name.value,
-  //     amount: amount.value
-  //   })
-  // }).filter(Boolean)
-  const expenses = [];
-  // const expenses = getExpenseListFromTextList(textList)
+  const expenses = getExpenseListFromTextList(textList) || [];
   const personsPerAmount = calculateExpensesPerPerson(expenses);
   const oweList = calculateOweList(personsPerAmount);
   // TODO
-  const settleList = calculateSettlement(oweList);
+  const settlementList = calculateSettlement(oweList);
   const totalSpent = expenses.reduce(
     (previous, current) => previous + parseInt(current.amount),
     0
@@ -64,7 +35,6 @@ const Home = () => {
     if (key === 'Enter') {
       const text = target.value;
       const lines = text.split('\n');
-      console.log(lines);
       setTextList(lines);
     }
   };
