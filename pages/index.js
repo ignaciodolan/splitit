@@ -13,22 +13,22 @@ const Home = () => {
   const expenses = getExpenseListFromTextList(textList) || [];
   const personsPerAmount = calculateExpensesPerPerson(expenses);
   const oweList = calculateOweList(personsPerAmount);
-  // TODO
   const settlementList = calculateSettlement(oweList);
   const totalSpent = expenses.reduce(
     (previous, current) => previous + parseInt(current.amount),
     0
   );
-
   const eachOwes = totalSpent / personsPerAmount.length;
+
   console.log('expenses', expenses);
   console.log('personsPerAmount');
   console.table(personsPerAmount);
   console.log('total spent', totalSpent);
   console.log('eachOwes', eachOwes);
-
   console.log('oweList');
   console.table(oweList);
+  console.log('settlementList');
+  console.table(settlementList);
 
   const onKeyDown = (event) => {
     const { target, key } = event;
@@ -39,20 +39,23 @@ const Home = () => {
     }
   };
 
-  const printExpenseTable = () => {
-    const expenses = getExpenseListFromTextList(textList);
-    const personsPerAmount = calculateExpensesPerPerson(expenses);
+  const printExpenseTable = (personsPerAmount) => {
     const items = personsPerAmount.map((item) => [item.name, item.amount]);
     return AsciiTable.table([['name', 'amount'], ...items]);
   };
 
-  const printOwesTable = () => {
-    const expenses = getExpenseListFromTextList(textList);
+  const printOwesTable = (expenses) => {
     const personsPerAmount = calculateExpensesPerPerson(expenses);
     const oweList = calculateOweList(personsPerAmount);
     const items = oweList.map((item) => [item.name, item.owes]);
     return AsciiTable.table([['name', 'owes'], ...items]);
   };
+
+  const printPaymentTable = (settlementList) =>
+    settlementList.map((movement) => {
+      const [person1, person2, amount] = movement;
+      return <p>{`${person1} owes ${person2} $${amount}`}</p>;
+    });
 
   return (
     <Section>
@@ -63,13 +66,13 @@ const Home = () => {
         {textList.length > 0 && (
           <>
             <p className="px-4">Total spent: {totalSpent}</p>
-            <div className="md:block">
+            <div>
               <p>Expenses:</p>
-              <pre>{printExpenseTable()}</pre>
+              <pre>{printExpenseTable(personsPerAmount)}</pre>
             </div>
-            <div className="md:block">
-              <p>Owe list:</p>
-              <pre>{printOwesTable()}</pre>
+            <div>
+              <p>Payment list:</p>
+              {printPaymentTable(settlementList)}
             </div>
           </>
         )}

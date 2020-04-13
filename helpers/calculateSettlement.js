@@ -1,35 +1,38 @@
+/* 
+  calculateSettlement
+  Helper to calculate the movements between persons givent the 
+  balance list "oweList"
+  @arg: oweList: [{name:'', owes: ''}]
+*/
 const calculateSettlement = (oweList) => {
+  const sortedPeople = oweList
+    .sort((personA, personB) => personA.owes - personB.owes)
+    .map((person) => person.name);
+  const sortedValuesPaid = oweList
+    .sort((personA, personB) => personA.owes - personB.owes)
+    .map((person) => person.owes);
 
-    //->recorrer lista
-    // si la persona A esta en negativo
-    // -> encontrar a quien pagarle
-    // 1 -> si persona B - persona A > 0
-    // 2 --> anota el movimiento
-    // 3 --> si persona A le queda deuda
-    // 4 --> buscar al proximo y volver a 1
-    // 5 -> si persona B - persona A < 0
-    // 6 --> anota el movimiento
-    // 7 --> cambia saldo persona A
-    // 7 -> si persona A deuda =0 
-    // 8 --> voy al siguiente
-    // si esta positivo
-    // seguir al proximo
-
-    /*
-      {name: "pela", owes: -40.75}
-      {name: "doly", owes: 37.25}
-      {name: "mateo", owes: -63.75}
-      {name: "tato", owes: 67.25}
-      total = 275
-    */
-    
-    for (let i=0; i < oweList.length; i++) {
-      const person = oweList[0]
-      // person esta en positivo
-      if (person.owe > 0) {
-        continue;
-      }
+  // Taken from
+  // https://stackoverflow.com/questions/974922/algorithm-to-share-settle-expenses-among-a-group
+  let i = 0;
+  let j = sortedPeople.length - 1;
+  let debt;
+  const movements = [];
+  while (i < j) {
+    debt = Math.min(-sortedValuesPaid[i], sortedValuesPaid[j]);
+    sortedValuesPaid[i] += debt;
+    sortedValuesPaid[j] -= debt;
+    movements.push([sortedPeople[i], sortedPeople[j], debt]);
+    if (sortedValuesPaid[i] === 0) {
+      i++;
     }
-}
 
-export default calculateSettlement
+    if (sortedValuesPaid[j] === 0) {
+      j--;
+    }
+  }
+
+  return movements;
+};
+
+export default calculateSettlement;
