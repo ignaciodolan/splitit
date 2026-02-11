@@ -8,12 +8,12 @@
 
 ## Tech Stack
 
-- **Framework:** Next.js 9.3.x (React 16.11)
-- **Styling:** styled-components (CSS-in-JS) with SSR support
+- **Framework:** Next.js 15.x (React 19)
+- **Styling:** styled-components 6 (CSS-in-JS) with SWC compiler support
 - **Parsing:** moo (lexer/tokenizer for expense text input)
 - **Display:** ascii-data-table (renders expense summaries)
-- **Testing:** Jest 24 + Enzyme 3
-- **Transpilation:** Babel 7 with next/babel preset
+- **Testing:** Jest 29 with next/jest (SWC transforms)
+- **Compiler:** SWC (Next.js built-in, no Babel)
 
 ## Project Structure
 
@@ -30,10 +30,11 @@ splitit/
 │   ├── getExpenseListFromTextList.js       # Parses text input into expense objects
 │   └── getExpenseListFromTextList.spec.js
 ├── pages/               # Next.js pages (file-based routing)
+│   ├── _app.js          # Custom App component (global CSS import)
 │   └── index.js         # Main application page
 ├── public/              # Static assets
 ├── styles/              # Global CSS
-│   └── main.css
+│   └── main.css         # Basic CSS reset
 ```
 
 ## Commands
@@ -52,7 +53,7 @@ npm start            # Start production server
 npm test             # Run all Jest tests
 ```
 
-There are 14 unit tests across 3 spec files, all in `helpers/`. Tests use Jest + Enzyme with React 16 adapter.
+There are 15 unit tests across 3 spec files, all in `helpers/`. Tests use Jest 29 with SWC transforms via `next/jest`.
 
 ## Architecture & Data Flow
 
@@ -79,15 +80,13 @@ All business logic lives in `helpers/` as pure functions. The UI is a single pag
 
 | File | Purpose |
 |---|---|
-| `.babelrc` / `babel.config.js` | Babel presets (next/babel + styled-components plugin) |
-| `jest.config.js` | Jest config (setup file, ignore patterns) |
-| `jest.setup.js` | Enzyme adapter setup for React 16 |
-| `next.config.js` | Webpack customization, CSS module support, source maps |
+| `jest.config.js` | Jest config using `next/jest` for SWC transforms |
+| `next.config.js` | Next.js config with styled-components compiler support |
 | `.prettierrc` | Code formatting rules |
 
 ## Notes
 
 - No ESLint is configured; formatting is handled by Prettier only
 - No CI/CD pipeline is configured
-- The `styles/main.css` references Tailwind CSS directives but Tailwind is not installed as a dependency
-- Both `package-lock.json` and `yarn.lock` exist; prefer `npm` for consistency with the scripts
+- Uses SWC compiler (no Babel) for both builds and test transforms
+- Global CSS is imported via `pages/_app.js` (Next.js convention)

@@ -1,12 +1,10 @@
 import React from 'react';
 import AsciiTable from 'ascii-data-table';
-import moo from 'moo';
 import styled from 'styled-components';
 import getExpenseListFromTextList from '../helpers/getExpenseListFromTextList';
 import calculateExpensesPerPerson from '../helpers/calculateExpensesPerPerson';
 import calculateOweList from '../helpers/calculateOweList';
 import calculateSettlement from '../helpers/calculateSettlement';
-import '../styles/main.css';
 
 const Home = () => {
   const [textList, setTextList] = React.useState([]);
@@ -65,7 +63,7 @@ const Home = () => {
       <Container>
         {textList.length > 0 && (
           <>
-            <p className="px-4">Total spent: {totalSpent}</p>
+            <p style={{ padding: '0 1rem' }}>Total spent: {totalSpent}</p>
             <div>
               <p>Expenses:</p>
               <pre>{printExpenseTable(personsPerAmount)}</pre>

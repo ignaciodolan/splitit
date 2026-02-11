@@ -1,4 +1,2 @@
-import { configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+// Jest setup file
+// Enzyme removed — tests use plain Jest assertions on pure functions
