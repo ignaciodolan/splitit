@@ -9,7 +9,7 @@ const getExpenseListFromTextList = (textList) => {
     const lexer = moo.compile({
       WS:      /[ \t]+/,
       comment: /\/\/.*?$/,
-      number:  /0|[1-9][0-9]*/,
+      number:  /(?:0|[1-9][0-9]*)(?:\.[0-9]+)?/,
       string:  /"(?:\\["\\]|[^\n"\\])*"/,
       text:  /[A-Za-z]+/,
       lparen:  '(',

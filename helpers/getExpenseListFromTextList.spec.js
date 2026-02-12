@@ -27,6 +27,15 @@ describe('The `getExpenseListFromTextList` helper', () => {
     expect(actual).toEqual(expected);
   });
 
+  it('should handle decimal amounts', () => {
+    const actual = getExpenseListFromTextList(['18.50 john', '2.5 jim']);
+    const expected = [
+      { name: 'john', amount: '18.50' },
+      { name: 'jim', amount: '2.5' },
+    ];
+    expect(actual).toEqual(expected);
+  });
+
   it('should return an omit values that doesnt have expense and name', () => {
     const actual = getExpenseListFromTextList(['john', '2 jim']);
     const expected = [{ name: 'jim', amount: '2' }];
